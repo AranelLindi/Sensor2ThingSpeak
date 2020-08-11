@@ -52,19 +52,19 @@ void setup() {
       Serial.print("SensorID was: 0x); Serial.println(bme.sensorID(),16);
       Serial.print(" ID of 0xFF probably means a bad address, a BMP 180 or BMP 085\n");
       Serial.print(" ID of 0x56-0x58 represents a BMP 280.\n");
-      Serial.print(" ID of 0x60 represents a BME 280.n");
-      Serial.print(" ID of 0x61 represents a BME 680.n");
+      Serial.print(" ID of 0x60 represents a BME 280.\n");
+      Serial.print(" ID of 0x61 represents a BME 680.\n");
       while (1) delay(10);
   }
 
   // write message if everything worked fine
-  Serial.println(F("System set up!"));
+  Serial.println("System set up!");
 }
 
 void loop() {
   // Connect or reconnect to WiFi
   if (WiFi.status() != WL_CONNECTED) {
-    Serial.print(Attempting to connect to SSID: );
+    Serial.print("Attempting to connect to SSID: ");
     Serial.println(SECRET_SSID);
 
     WiFi.begin(ssid, pass); // Connect to WPA/WPA2 network
@@ -74,7 +74,7 @@ void loop() {
       Serial.print(.);
     }
     
-    Serial.print(nConnected with ip: );
+    Serial.print("\nConnected with ip: ");
     Serial.println(WiFi.localIP());
   }
 
@@ -90,9 +90,9 @@ void loop() {
   int32_t httpCode = ThingSpeak.writeFields(myChannelNumber, myWriteAPIKey);
     
   if (httpCode == 200)
-    Serial.println(Channel write successful.);
+    Serial.println("Channel write successful.");
   else
-    Serial.println(Problem writing to channel. HTTP error code  + String(httpCode));
+    Serial.println("Problem writing to channel. HTTP error code"  + String(httpCode));
 
   // Wait [interval]-seconds to update the channel again
   delay(interval * 1000); 
