@@ -1,4 +1,4 @@
-// Standartbibliothek
+// Standart library
 #include <cstdint> // uint-types
 
 // BME280
@@ -11,29 +11,30 @@
 // ThingSpeak
 #include ThingSpeak.h
 
-// eigener Code
-#include secrets.h // wichtig: in .gitignore! Enthält Wlan SSID & Passwort!
+// own code
+#include secrets.h // important: in .gitignore! Contains wlan ssid & password!
 
 
 // ThingSpeak
-uint64_t myChannelNumber = SECRET_CHANNEL_ID; // definiert in secrets.h
-const char* myWriteAPIKey = SECRET_WRITE_APIKEY; // definiert in secrets.h
+uint64_t myChannelNumber = SECRET_CHANNEL_ID; // defined in secrets.h
+const char* myWriteAPIKey = SECRET_WRITE_APIKEY; // defined in secrets.h
 
 // Wlan
-const char* ssid = SECRET_SSID;
-const char* pass = SECRET_PASS;
+const char* ssid = SECRET_SSID; // defined in secrets.h
+const char* pass = SECRET_PASS; // defined in secrets.h
 
 // periodic status reports
 const uint16_t interval = 60; // Update statistics and measures every 60 seconds
 
 WiFiClient client; // web communication
 
-// instance of bme sensor
+// instance of bme280 sensor
 Adafruit_BME280 bme; // I2C
 
 
 void setup() {
   Serial.begin(115200);
+  while(!Serial); // time to get serial running
   
   //WiFi.init(&Serial); // decomment for debugging (posts Wlan Messages)
 
@@ -46,6 +47,7 @@ void setup() {
   uint32_t status = bme.begin(0x76);
 
   // following if statement shouldn't be neccessary, usefull for debugging purposes
+  if (!status) {
       Serial.println(Could not find a valid BME280 sensor, check wiring, address, sensor ID!);
       Serial.print(SensorID was: 0x); Serial.println(bme.sensorID(),16);
       Serial.print( ID of 0xFF probably means a bad address, a BMP 180 or BMP 085n);
@@ -85,8 +87,8 @@ void loop() {
   ThingSpeak.setField(3, bme.readPressure());
 
   // send values to ThingSpeak website
-  int32_t httpCode = ThingSpeak.writeFields(myChannelNumber, myWriteAPIKey); //ThingSpeak.writeField(myChannelNumber, 1, bme.readTemperature(), myWriteAPIKey);
-  
+  int32_t httpCode = ThingSpeak.writeFields(myChannelNumber, myWriteAPIKey);
+    
   if (httpCode == 200)
     Serial.println(Channel write successful.);
   else
